@@ -1,9 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const userid = localStorage.getItem("userid");
+
+  const [opacity, setOpacity] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const newOpacity = scrollPosition > 50 ? 0.95 : scrollPosition / 50;
+      setOpacity(newOpacity);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const handleSignout = () => {
     localStorage.removeItem("userid");
@@ -12,7 +28,10 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <div className="flex fixed top-0 bg-transparent justify-between items-center p-4 w-full z-10 text-white">
+    <div
+    className="flex fixed top-0 justify-between items-center p-4 w-full z-10 text-white"
+    style={{ backgroundColor: `rgba(0, 0, 0, ${opacity})` }}
+     >
       <img
         src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
         alt="Netflix Logo"
